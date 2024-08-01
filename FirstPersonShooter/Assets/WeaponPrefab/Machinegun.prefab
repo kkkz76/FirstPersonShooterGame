@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunAttachPoint: {fileID: 0}
   weaponPrefab: {fileID: 2082959803688788947}
+  WeaponRespawnTime: 4
 --- !u!65 &-3146988691897309180
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -331,6 +332,7 @@ PrefabInstance:
     - {fileID: -6057140222963153312, guid: 31dfb11233dba464c939da0f509fe6d2, type: 3}
     m_RemovedGameObjects:
     - {fileID: 4819803062278737221, guid: 31dfb11233dba464c939da0f509fe6d2, type: 3}
+    - {fileID: -351626183807485681, guid: 31dfb11233dba464c939da0f509fe6d2, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 31dfb11233dba464c939da0f509fe6d2, type: 3}
