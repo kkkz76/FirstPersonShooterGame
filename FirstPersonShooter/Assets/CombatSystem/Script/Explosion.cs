@@ -31,6 +31,7 @@ public class Explosion : MonoBehaviour
 
     private IEnumerator bombTrigger(Collision collision)
     {
+        Debug.Log("a");
         yield return new WaitForSeconds(boombDelayTime);
         
         GameObject bs = Instantiate(bombSound, explosionPos, Quaternion.identity);
