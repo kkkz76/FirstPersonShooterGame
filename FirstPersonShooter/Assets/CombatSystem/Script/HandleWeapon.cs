@@ -5,13 +5,22 @@ using UnityEngine;
 public class HandleWeapon : MonoBehaviour
 {
     [SerializeField] private Transform gunAttachPoint;
-    [SerializeField] private GameObject weaponPrefab; 
+    [SerializeField] private GameObject weaponPrefab;
+    [SerializeField] private float WeaponRespawnTime = 4.0f;
+
+    private Collider weaponCollider;
+
+    private void Start()
+    {
+        weaponCollider = GetComponent<Collider>();
+     
+    }
     private void OnTriggerEnter(Collider other)
     {
         
         if (other.CompareTag("Player"))
         {
-          
+            
             bool PlayerHasGun = Shooter.getHasGunOnHand();
 
             if (PlayerHasGun)
@@ -30,6 +39,26 @@ public class HandleWeapon : MonoBehaviour
             Shooter.setHasGunOnHand(true);
 
             Debug.Log(weaponPrefab.name + " is attached");
+            StartCoroutine(RespawnWeapon());
+        }
+    }
+
+    private IEnumerator RespawnWeapon()
+    {
+
+       
+        weaponCollider.enabled = false;
+        SetActiveChildren(false);
+        yield return new WaitForSeconds(WeaponRespawnTime);
+        weaponCollider.enabled = true;
+        SetActiveChildren(true);
+    }
+
+    private void SetActiveChildren(bool value)
+    {
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(value);
         }
     }
 

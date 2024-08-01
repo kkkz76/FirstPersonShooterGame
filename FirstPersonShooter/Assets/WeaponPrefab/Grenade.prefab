@@ -95,9 +95,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fd237865df36a043bddb9f8e298bffc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 5
-  power: 10
-  boombDelayTime: 2
+  particleSysPrefab: {fileID: 8123594383034347935, guid: 3a279bf9c7c5b41468d036c9c54c6217,
+    type: 3}
+  bombSound: {fileID: 8321924520162838455, guid: 5ae761cf013bc7e4e92a815d0c1b2ab8,
+    type: 3}
 --- !u!1001 &6944048558361662296
 PrefabInstance:
   m_ObjectHideFlags: 0

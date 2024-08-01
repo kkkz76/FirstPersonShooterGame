@@ -12,35 +12,40 @@ public class Shooter : MonoBehaviour
     private static string gunType;        // check gun type
     public float impulseStrength = 5.0f;  // for bullet impulse
     private int bulletDamage = 1;
+    private AudioSource audioSource;
 
     // For machine gun
     private float rateOfFire = 0.2f;
     private float startDelay = 0.5f;
 
     // For shotgun
-    private const int shotgunPelletCount = 4;
-    private const float shotgunSpreadAngle = 0.1f ;
+    private const int shotgunPelletCount = 5;
+    private const float shotgunSpreadAngle = 0.12f ;
+    [SerializeField] private AudioClip shotgunSound;
 
-    // For handgun and machine gun
+    // For handgun
     private const int handgunPellets = 1;
     private const float HandgunSpreadAngle = 0.02f;
+    [SerializeField] private AudioClip handgunSound;
 
 
     //For machine gun
     private const int machinegunPellets = 1;
     private const float machinegunSpreadAngle = 0.05f;
+    [SerializeField] private AudioClip machinegunSound;
 
     //For Grenade
     private float minGrenadeImpulse = 3.0f;
     private float maxGrenadeImpulse = 8.0f;
     private float guageFillrate = 4.0f;
     private float currentImpulse = 0.0f;
-
+    
 
     void Start()
     {
         // Gets the GameObject's camera component
         cam = GetComponent<Camera>();
+        audioSource = GetComponent<AudioSource>();
 
         // Hides the mouse cursor at the center of the screen
         Cursor.lockState = CursorLockMode.Locked;
@@ -116,6 +121,7 @@ public class Shooter : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Shoot(handgunPellets, HandgunSpreadAngle);
+            audioSource.PlayOneShot(handgunSound);
         }
     }
 
@@ -130,12 +136,18 @@ public class Shooter : MonoBehaviour
         {
             InvokeRepeating(nameof(ShootMachineGun), startDelay, rateOfFire);
             isFiring = true;
+            audioSource.clip = machinegunSound;
+            audioSource.loop = true; 
+            audioSource.Play(); 
         }
 
         if (Input.GetMouseButtonUp(0) && isFiring)
         {
             CancelInvoke(nameof(ShootMachineGun));
             isFiring = false;
+            audioSource.Stop(); 
+            audioSource.loop = false; 
+            
         }
     }
 
@@ -143,6 +155,7 @@ public class Shooter : MonoBehaviour
     private void ShootMachineGun()
     {
         Shoot(machinegunPellets, machinegunSpreadAngle);
+       
     }
     //----------------------------------------------------------------------------------------------
 
@@ -154,6 +167,7 @@ public class Shooter : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Shoot(shotgunPelletCount, shotgunSpreadAngle);
+            audioSource.PlayOneShot(shotgunSound);
         }
     }
 
@@ -172,7 +186,7 @@ public class Shooter : MonoBehaviour
                 currentImpulse += guageFillrate * Time.deltaTime;
                 // Clamp the impulse to the max value
                 currentImpulse = Mathf.Clamp(currentImpulse, minGrenadeImpulse, maxGrenadeImpulse);
-                Debug.Log(currentImpulse);
+                Debug.Log("Bomb Throw Force : "+ currentImpulse);
             }
            
         }
@@ -186,6 +200,7 @@ public class Shooter : MonoBehaviour
             Vector3 impulse = cam.transform.forward * currentImpulse;
             rb.AddForceAtPosition(impulse, cam.transform.position, ForceMode.Impulse);
             currentImpulse = 0.0f;
+
         }
 
 
@@ -221,8 +236,9 @@ public class Shooter : MonoBehaviour
             if(gunType == "Handgun")
             {
                 HandleHandgunShoot();
+               
             }
-            else if(gunType == "Machinegun" || gunType == "Rifle")
+            else if(gunType == "Machinegun")
             {
                 HandleMachineGunShoot();
             }
