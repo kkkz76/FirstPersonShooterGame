@@ -11,6 +11,7 @@ public class Shooter : MonoBehaviour
     private static bool hasGunOnHand;     // check for gun on hand  
     private static string gunType;        // check gun type
     public float impulseStrength = 5.0f;  // for bullet impulse
+    private int bulletDamage = 1;
 
     // For machine gun
     private float rateOfFire = 0.2f;
@@ -32,7 +33,8 @@ public class Shooter : MonoBehaviour
     //For Grenade
     private float minGrenadeImpulse = 3.0f;
     private float maxGrenadeImpulse = 8.0f;
-    private float guageFillrate = 2.0f;
+    private float guageFillrate = 4.0f;
+    private float currentImpulse = 0.0f;
 
 
     void Start()
@@ -86,8 +88,10 @@ public class Shooter : MonoBehaviour
                 {
                     Vector3 impulse = Vector3.Normalize(hit.point - transform.position) * impulseStrength;
                     hit.rigidbody?.AddForceAtPosition(impulse, hit.point, ForceMode.Impulse);
+                    target.SetHealth(bulletDamage);
                     StartCoroutine(GeneratePS(hit));
                 }
+
             }
            
 
@@ -157,72 +161,35 @@ public class Shooter : MonoBehaviour
 
     //----------------------------------------------------------------------------------------------
 
-    //For Grenade 
-    //private void HandleGrenadeThrow()
-    //{
-    //    float currentImpulse = 0.0f;
-    //    if (Input.GetMouseButton(1))
-    //    {
-            
-    //        if (currentImpulse < maxGrenadeImpulse)
-    //        {
-    //            if (currentImpulse < maxGrenadeImpulse)
-    //            {
-    //                currentImpulse += guageFillrate * Time.deltaTime;
-    //                // Clamp the impulse to the max value
-    //                currentImpulse = Mathf.Clamp(currentImpulse, minGrenadeImpulse, maxGrenadeImpulse);
-    //            }
-    //        }
-    //    }
-    //    else if (Input.GetMouseButtonUp(1))
-
-    //    {
-    //        Debug.Log(currentImpulse);
-    //        Vector3 grenadePosition = cam.transform.position + cam.transform.forward * 2;
-    //        GameObject grenade = Instantiate(grenadePrefab, grenadePosition, Quaternion.identity);
-    //        Rigidbody rb = grenade.GetComponent<Rigidbody>();
-    //        Vector3 impulse = cam.transform.forward * currentImpulse;
-    //        rb.AddForceAtPosition(impulse, cam.transform.position, ForceMode.Impulse);
-    //    }
-
-
-    //}
-
-
-    private float currentImpulse = 0.0f; // Class-level variable to track impulse
-
+    //For Grenade
     private void HandleGrenadeThrow()
     {
-        // Increment impulse while the right mouse button is held
-        if (Input.GetMouseButton(1)) // Right mouse button held
+       
+        if (Input.GetMouseButton(1))
         {
             if (currentImpulse < maxGrenadeImpulse)
             {
                 currentImpulse += guageFillrate * Time.deltaTime;
                 // Clamp the impulse to the max value
                 currentImpulse = Mathf.Clamp(currentImpulse, minGrenadeImpulse, maxGrenadeImpulse);
+                Debug.Log(currentImpulse);
             }
+           
         }
-        else if (Input.GetMouseButtonUp(1)) // Right mouse button released
+        else if (Input.GetMouseButtonUp(1))
+
         {
-            // Throw the grenade
-            Debug.Log("Grenade Impulse: " + currentImpulse);
+            
             Vector3 grenadePosition = cam.transform.position + cam.transform.forward * 2;
             GameObject grenade = Instantiate(grenadePrefab, grenadePosition, Quaternion.identity);
             Rigidbody rb = grenade.GetComponent<Rigidbody>();
-
-            // Apply the force to the grenade
-            if (rb != null)
-            {
-                Vector3 impulse = cam.transform.forward * currentImpulse;
-                rb.AddForce(impulse, ForceMode.Impulse);
-            }
-
-            // Reset impulse after throwing
-            currentImpulse = minGrenadeImpulse;
+            Vector3 impulse = cam.transform.forward * currentImpulse;
+            rb.AddForceAtPosition(impulse, cam.transform.position, ForceMode.Impulse);
+            currentImpulse = 0.0f;
         }
-    }
 
+
+    }
 
     //----------------------------------------------------------------------------------------------
 
