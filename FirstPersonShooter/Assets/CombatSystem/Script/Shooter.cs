@@ -136,7 +136,10 @@ public class Shooter : MonoBehaviour
         {
             InvokeRepeating(nameof(ShootMachineGun), startDelay, rateOfFire);
             isFiring = true;
-            audioSource.clip = machinegunSound;
+            if (audioSource.clip != machinegunSound)
+            {
+                audioSource.clip = machinegunSound; 
+            }
             audioSource.loop = true; 
             audioSource.Play(); 
         }
@@ -155,6 +158,13 @@ public class Shooter : MonoBehaviour
     private void ShootMachineGun()
     {
         Shoot(machinegunPellets, machinegunSpreadAngle);
+        if(gunType != "Machinegun")
+        {
+            CancelInvoke(nameof(ShootMachineGun));
+            isFiring = false;
+            audioSource.Stop();
+            audioSource.loop = false;
+        }
        
     }
     //----------------------------------------------------------------------------------------------
@@ -235,15 +245,18 @@ public class Shooter : MonoBehaviour
         {
             if(gunType == "Handgun")
             {
+                
                 HandleHandgunShoot();
                
             }
             else if(gunType == "Machinegun")
             {
+                
                 HandleMachineGunShoot();
             }
             else if(gunType == "Shotgun")
             {
+                
                 HandleShotgunShoot();
             }
       
